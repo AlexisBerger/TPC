@@ -6,6 +6,7 @@
 #include "quickSort.h"
 #include "graph.h"
 
+
 int** getAdjacence(Graph graph);
 int** createMatrix(int size);
 void initM0(int** m, int size);
@@ -22,3 +23,5 @@ int** additionBool(int** m, int** m2, int size);
 int** mchapeau(Graph graph);
 int isEqual(int** m, int** m2, int size);
 void freeMatrix(int** m, int size);
+
+Graph* kruskal(Graph graph);

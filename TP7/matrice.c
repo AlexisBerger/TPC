@@ -5,19 +5,14 @@ void displayMatrice(Graph graph) {
 	printf("M^ : \n");
 	printMatrix(mchapeau(graph), size);
 
+	Graph* opti = kruskal(graph);
 
-	Array* lien = setByGraph(graph);
-	printf("not sort\n");
-	displayArray(*lien);
-	quicksort(lien, 0, lien->size - 1);
-	printf("sort\n");
-	displayArray(*lien);
-
+	displayGraph(*opti);
 
 }
 
 int** getAdjacence(Graph graph) {
-	int size = lengthGraph(graph);
+	int size = lengthGraph(graph); 
 
 	int ** m1 = createMatrix(size);
 	initM1(graph, m1, size);
@@ -189,4 +184,38 @@ void freeMatrix(int** m, int size) {
 		free(m[i]);
 	}
 	free(m);
+}
+
+Graph* kruskal(Graph graph) {
+	Array* lien = setByGraph(graph);
+
+	quicksort(lien, 0, lien->size - 1);
+	displayArray(*lien);
+	int size = lengthGraph(graph);
+
+
+	Graph res = NULL;
+	for (Graph i = graph; i != NULL; i = i->next) {
+		addNode(&res, createNode(i->value));
+	}
+
+	for (int i = 0; i < lien->size; i++)
+	{
+		Graph j;
+		for (j = res; (j != NULL) && (j->value != lien->first[i].key.x); j = j->next);
+		Graph k;
+		for (k = res; k != NULL && k->value != lien->first[i].key.y; k = k->next);
+		if (j->component != k->component) {
+			int comp = k->component;
+			for (Graph l = res; l != NULL ; l = l->next) {
+				if (comp == l->component) {
+					l->component = j->component;
+				}
+			}
+
+			addLink(&res, createLink(k->value, lien->first[i].value), j->value);
+		}
+	}
+
+	return &res;
 }

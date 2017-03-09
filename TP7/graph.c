@@ -3,10 +3,16 @@
 
 #include "graph.h"
 
+#ifndef _CC
+#define _CC
+int _cc = 0;
+#endif // !1
+
 void initNode(Node* node) {
 	node->array = NULL;
 	node->next = NULL;
 	node->value = 0;
+	node->component = _cc;
 }
 void initLink(Link* link) {
 	link->next = NULL;
@@ -19,6 +25,7 @@ Node* createNode(int value) {
 	Node* node = malloc(sizeof(Node));
 	initNode(node);
 	node->value = value;
+	_cc++;
 	return node;
 }
 Link* createLink(int node, int value) {

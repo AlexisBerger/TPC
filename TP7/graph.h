@@ -7,10 +7,13 @@ typedef struct Link {
 }Link;
 typedef struct Node {
 	int value;
+	int component;
 	struct Node* next;
 	Link* array;
 }Node;
 typedef Node* Graph;
+
+
 
 
 
