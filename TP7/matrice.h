@@ -25,3 +25,5 @@ int isEqual(int** m, int** m2, int size);
 void freeMatrix(int** m, int size);
 
 Graph* kruskal(Graph graph);
+
+Graph dijkstra(Graph graph)

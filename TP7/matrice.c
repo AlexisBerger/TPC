@@ -219,3 +219,8 @@ Graph* kruskal(Graph graph) {
 
 	return &res;
 }
+
+Graph dijkstra(Graph graph) {
+
+
+}
