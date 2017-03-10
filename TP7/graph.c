@@ -134,6 +134,7 @@ int linkCount(Graph graph) {
 }
 
 void displayGraph(Graph graph) {
+	if (graph == NULL)return;
 	printf("Nombre de node  : %d\n", lengthGraph(graph));
 	printf("Liens:\n");
 	for (Graph i = graph; i != NULL; i = i->next) {

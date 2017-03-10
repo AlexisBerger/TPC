@@ -1,18 +1,22 @@
 #include"matrice.h"
 
 void displayMatrice(Graph graph) {
+	if (graph == NULL) return;
 	int size = lengthGraph(graph);
+	if (size == 0) return;
 	printf("M^ : \n");
+	
 	printMatrix(mchapeau(graph), size);
 
 	Graph* opti = kruskal(graph);
-
 	displayGraph(*opti);
 
+	Graph* dj = dijkstra(graph, 1);
+	//displayGraph(*dj);
 }
 
 int** getAdjacence(Graph graph) {
-	int size = lengthGraph(graph); 
+	int size = lengthGraph(graph);
 
 	int ** m1 = createMatrix(size);
 	initM1(graph, m1, size);
@@ -207,7 +211,7 @@ Graph* kruskal(Graph graph) {
 		for (k = res; k != NULL && k->value != lien->first[i].key.y; k = k->next);
 		if (j->component != k->component) {
 			int comp = k->component;
-			for (Graph l = res; l != NULL ; l = l->next) {
+			for (Graph l = res; l != NULL; l = l->next) {
 				if (comp == l->component) {
 					l->component = j->component;
 				}
@@ -220,7 +224,126 @@ Graph* kruskal(Graph graph) {
 	return &res;
 }
 
-Graph dijkstra(Graph graph) {
+void adjacente(Graph graph, int** m, int size) {
+	int* listNode = getListNode(graph, size);
+
+	for (Graph i = graph; i != NULL; i = i->next) {
+		int k;
+		for (k = 0; k < size && i->value != listNode[k]; k++);
+		if (i->array != NULL) {
+			for (Link* j = i->array; j != NULL; j = j->next) {
+				int l;
+				for (l = 0; l < size && j->node != listNode[l]; l++);
+				m[k][l] = j->value;
+				m[l][k] = j->value;
+			}
+		}
+	}
+}
+
+Graph dijkstra(Graph graph, int start) {
+	Graph res = NULL;
+	Array tab;
+
+	if (graph == NULL) return;
+
+	int size = lengthGraph(graph);
+	if (size == 0) return;
+	Cell* chemin = malloc(size*sizeof(Cell));
+
+	chemin[0].key.x = start;
+	chemin[0].key.y = 0;
+	chemin[0].value = 0;
+	int ** m = createMatrix(size);
+	adjacente(graph, m, size);
+
+	//printMatrix(m, size);
+
+	int* listNode = getListNode(graph, size);
+
+	int posStart;
+	for (posStart = 0; posStart < size && start != listNode[posStart]; posStart++);
+
+	tab.first = malloc(sizeof(Cell)*(size - 1));
+	tab.size = size - 1;
+
+	int j = 0;
+	for (Graph i = graph; (i != NULL); i = i->next) {
+		if (i->value != start) {
+			tab.first[j].key.x = i->value;
+			int l;
+			for (l = 0; l < size && i->value != listNode[l]; l++);
+			if (m[posStart][l] > 0) {
+				tab.first[j].value = m[posStart][l];
+				tab.first[j].key.y = start;
+			}
+			else {
+				tab.first[j].value = -1;
+			}
+			j++;
+		}
+
+	}
+	int sizeD = size - 1;
+	int i = 1;
+	Cell* ntab;
+	Cell* tmp = tab.first;
+	while (sizeD > 0)
+	{
+		
+		ntab = malloc(sizeof(Cell)*(sizeD - 1));
+		int min = -1;
+		for (int k = 0; k < sizeD;k++)
+		{	//select min
+			
+			//printf("%d < %d\n", tmp[k].value, min);
+
+			if (min == -1 || tmp[k].value < min) {	//maj s
+				chemin[i].key.x = tmp[k].key.x;
+				chemin[i].key.y = 0;
+				chemin[i].value = tmp[k].value;
+				min = tmp[k].value;
+			}
+		}
+
+		int l;
+		for (l = 0; l < size && chemin[i].key.x != listNode[l]; l++);
+
+		int k2 = 0;
+		for (int k = 0; k < sizeD;k++)
+		{	//maj sbar
+			if (tmp[k].key.x != chemin[i].key.x) {
+				int o;
+				for (o = 0; o < size && ntab[k].key.x != listNode[o]; o++);
+				ntab[k2].key.x = tmp[k].key.x;
+				ntab[k2].key.y = tmp[k].key.y;
+				ntab[k2].value = tmp[k].value;
+
+				k2++;
+			}
+		}
+		sizeD--;
 
 
+		for (int k = 0; k < sizeD; k++)
+		{
+			int o;
+			for (o = 0; o < size && ntab[k].key.x != listNode[o]; o++);
+			if (m[l][o] > 0 && ntab[k].value > chemin[i].value + m[l][o]) {
+				ntab[k].value = chemin[i].value + m[l][o];
+				ntab[k].key.y = chemin[i].key.y;
+			}
+
+			
+		}
+		i++;
+		tmp = ntab;
+		
+	}
+	printf("\n");
+	Array soluce;
+	soluce.first = chemin;
+	soluce.size = size;
+	displayArray(soluce);
+	return res;
 }
