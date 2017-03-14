@@ -4,6 +4,7 @@
 #include "graph.h"
 #include "matrice.h"
 
+int menu(void);
 
 int main() {
 	/* test +&* matrix
@@ -114,7 +115,7 @@ int main() {
 	return 0;
 }
 
-int menu(void);
+
 
 int menu(void) {
 	char* buffer = malloc(10 * sizeof(char));

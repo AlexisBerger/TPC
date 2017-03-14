@@ -24,7 +24,10 @@ int** mchapeau(Graph graph);
 int isEqual(int** m, int** m2, int size);
 void freeMatrix(int** m, int size);
 
-Graph* kruskal(Graph graph);
+Graph kruskal(Graph graph);
 
-Graph dijkstra(Graph graph, int start);
+Array* dijkstra(Graph graph, int start);
 void adjacente(Graph graph, int** m, int size);
+
+
+void displayMatrice(Graph graph);

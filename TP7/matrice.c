@@ -4,15 +4,18 @@ void displayMatrice(Graph graph) {
 	if (graph == NULL) return;
 	int size = lengthGraph(graph);
 	if (size == 0) return;
-	printf("M^ : \n");
 	
+	printf("\nM^ : \n");
 	printMatrix(mchapeau(graph), size);
 
-	Graph* opti = kruskal(graph);
-	displayGraph(*opti);
+	printf("Kruskal : \n");
+	Graph opti = kruskal(graph);
+	displayGraph(opti);
 
-	Graph* dj = dijkstra(graph, 1);
-	//displayGraph(*dj);
+	printf("\nDijkstra :");
+	Array* soluce = dijkstra(graph, 1);
+	displayArray(*soluce);
+	
 }
 
 int** getAdjacence(Graph graph) {
@@ -190,11 +193,11 @@ void freeMatrix(int** m, int size) {
 	free(m);
 }
 
-Graph* kruskal(Graph graph) {
+Graph kruskal(Graph graph) {
 	Array* lien = setByGraph(graph);
 
 	quicksort(lien, 0, lien->size - 1);
-	displayArray(*lien);
+	//displayArray(*lien);
 	int size = lengthGraph(graph);
 
 
@@ -221,7 +224,7 @@ Graph* kruskal(Graph graph) {
 		}
 	}
 
-	return &res;
+	return res;
 }
 
 void adjacente(Graph graph, int** m, int size) {
@@ -241,14 +244,14 @@ void adjacente(Graph graph, int** m, int size) {
 	}
 }
 
-Graph dijkstra(Graph graph, int start) {
-	Graph res = NULL;
+Array* dijkstra(Graph graph, int start) {
+	Array* res = malloc(sizeof(Array));
 	Array tab;
 
-	if (graph == NULL) return;
+	if (graph == NULL) return res;
 
 	int size = lengthGraph(graph);
-	if (size == 0) return;
+	if (size == 0) return res;
 	Cell* chemin = malloc(size*sizeof(Cell));
 
 	chemin[0].key.x = start;
@@ -341,9 +344,9 @@ Graph dijkstra(Graph graph, int start) {
 		
 	}
 	printf("\n");
-	Array soluce;
-	soluce.first = chemin;
-	soluce.size = size;
-	displayArray(soluce);
+
+	res->first = chemin;
+	res->size = size;
+
 	return res;
 }
