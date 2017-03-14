@@ -25,6 +25,7 @@ int main() {
 	int** res2 = multiplication(m, m2, 3);
 	printMatrix(res2, 3);
 	*/
+
 	Graph graph = NULL;
 
 	readGraph(&graph);
@@ -37,6 +38,7 @@ int main() {
 	int nodeD = 0;
 
 	do {
+		int size = lengthGraph(graph);
 		switch (menu())
 		{
 		case 1:
@@ -97,12 +99,48 @@ int main() {
 			break;
 		case 4:
 			displayGraph(graph);
-			displayMatrice(graph);
-
 			break;
 		case 5:
 			writeGraph(&graph);
 			break;
+		case 6:
+			if (graph == NULL) break;
+			if (size == 0) break;
+			printf("\nM^ : \n");
+			printMatrix(mchapeau(graph), size);
+			break;
+		case 7:
+			if (graph == NULL) break;
+			if (size == 0) break;
+			printf("Kruskal : \n");
+			Graph opti = kruskal(graph);
+			displayGraph(opti);
+			break;
+		case 8:
+			if (graph == NULL) break;
+			if (size == 0) break;
+			do
+			{
+				printf("Saisir l'id du noeud de depart :\n> ");
+				fgets(buffer, 10, stdin);
+
+				buffer[strlen(buffer) - 1] = '\0';
+
+				nodeD = strtol(buffer, &end, 10);
+				
+			} while (buffer == end || !isExist(graph, nodeD));
+			
+			printf("\nDijkstra :");
+			Array* soluce = dijkstra(graph, nodeD);
+
+			for (int i = 0; i < soluce->size; i++)
+			{
+				printf("%d", soluce->first[i].key.x);
+				
+				printf(" : %d\n", soluce->first[i].value);
+			}
+			break;
+
 		case 0:
 			return 0;
 		default:
@@ -127,6 +165,10 @@ int menu(void) {
 		printf("3- Supprimer Noeud\n");
 		printf("4- Afficher Graph\n");
 		printf("5- Sauver Graph\n");
+		printf("6- M Chapeau\n");
+		printf("7- Kruskal\n");
+		printf("8- Dijsktra\n");
+
 
 		printf("0- Quitter\n");
 		printf("Tapez votre choix :\n> ");

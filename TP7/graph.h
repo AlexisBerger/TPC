@@ -34,4 +34,5 @@ int* getListNode(Graph graph, int size);
 
 void readGraph(Graph* graph);
 void writeGraph(Graph* graph);
+int isExist(Graph graph, int value);
 

@@ -36,6 +36,7 @@ Link* createLink(int node, int value) {
 	return link;
 }
 void addNode(Graph* graph, Node *node) {
+	if (isExist(*graph, node->value)) return;
 	Node* i = NULL;
 	for (i = *graph; i != NULL && i->next != NULL; i = i->next);
 	if(i != NULL) i->next = node;
@@ -136,7 +137,11 @@ int linkCount(Graph graph) {
 void displayGraph(Graph graph) {
 	if (graph == NULL)return;
 	printf("Nombre de node  : %d\n", lengthGraph(graph));
-	printf("Liens:\n");
+	printf("Node  : ");
+	for (Graph i = graph; i != NULL; i = i->next) {
+		printf("%d ", i->value);
+	}
+	printf("\nLiens:\n");
 	for (Graph i = graph; i != NULL; i = i->next) {
 		if (i->array != NULL) {
 			
@@ -168,7 +173,7 @@ int* getListNode(Graph graph, int size) {
 void readGraph(Graph* graph) {
 	FILE* file;
 	int nbNode = 0;
-	if (file = fopen("graph.dat", "r")) {
+	if (!(file = fopen("graph.dat", "r"))) {
 		file = fopen("graph.dat", "a+");
 	}
 	else {
@@ -176,6 +181,7 @@ void readGraph(Graph* graph) {
 	}
 	
 	fread(&nbNode, sizeof(int), 1, file);
+
 
 	for (int i = 0; i < nbNode; i++)
 	{
@@ -230,3 +236,13 @@ void writeGraph(Graph* graph) {
 	fclose(file);
 }
 
+int isExist(Graph graph, int value) {
+	for (Graph i = graph; i != NULL; i = i->next) {
+		if (i->value == value) {
+			return 1;
+		}
+	
+	}
+	return 0;
+
+}
